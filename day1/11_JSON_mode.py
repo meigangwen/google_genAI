@@ -1,47 +1,39 @@
 import os
 from google import genai
 from google.genai import types
+import typing_extensions as typing
 
 GOOGLE_API_KEY=os.getenv("GOOGLE_API_KEY")
 client = genai.Client(api_key=GOOGLE_API_KEY)
 
-# setup the prompt
-few_shot_prompt = """Parse a customer's pizza order into valid JSON:
-
-EXAMPLE:
-I want a small pizza with cheese, tomato sauce, and pepperoni.
-JSON Response:
-```
-{
-"size": "small",
-"type": "normal",
-"ingredients": ["cheese", "tomato sauce", "pepperoni"]
-}
-```
-
-EXAMPLE:
-Can I get a large pizza with tomato sauce, basil and mozzarella
-JSON Response:
-```
-{
-"size": "large",
-"type": "normal",
-"ingredients": ["tomato sauce", "basil", "mozzarella"]
-}
-```
-
-ORDER:
-"""
-
-customer_order = "Give me a large with cheese & pineapple"
+class PizzaOrder(typing.TypedDict):
+    size: str
+    ingredients: list[str]
+    type: str
 
 response = client.models.generate_content(
     model='gemini-2.0-flash',
     config=types.GenerateContentConfig(
         temperature=0.1,
-        top_p=1,
-        max_output_tokens=250,
+        response_mime_type="application/json",
+        response_schema=PizzaOrder,
     ),
-    contents=[few_shot_prompt, customer_order])
+    contents="Can I have a large dessert pizza with apple and chocolate")
+
+print(response.text)
+print('-' * 25)
+class Event(typing.TypedDict):
+    date: str
+    participants: list[str]
+    name: str
+
+response = client.models.generate_content(
+    model='gemini-2.0-flash',
+    config=types.GenerateContentConfig(
+        temperature=0.1,
+        response_mime_type="application/json",
+        response_schema=Event,
+    ),
+    contents="Bob, Adam and Lee are going to the Kangaroo Math Competition on the Sep 5th 2025")
 
 print(response.text)
