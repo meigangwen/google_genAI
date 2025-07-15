@@ -22,3 +22,13 @@ if os.path.exists(embeddings_test_path):
 
 print(x_test)
 print(y_test)
+
+embeddings_train_path = 'day2/store/embeddings_train.npz'
+if os.path.exists(embeddings_train_path):
+    print("Loading embeddings train ...")
+    data = np.load(embeddings_train_path)
+    x_train = data["x"]
+    y_train = data["y"]
+
+print(x_train)
+print(y_train)
