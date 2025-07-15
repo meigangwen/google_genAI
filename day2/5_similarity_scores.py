@@ -45,6 +45,6 @@ sim = df @ df.T
 
 # Draw!
 sns.heatmap(sim, vmin=0, vmax=1, cmap="Greens")
-plt.savefig("heatmap.png")
+plt.savefig("day2/store/heatmap.png")
 
 print(sim['The quick brown fox jumps over the lazy dog.'].sort_values(ascending=False))
